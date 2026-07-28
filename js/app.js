@@ -53,11 +53,59 @@ const updateMessage = () => {
         messageEl.innerText = "Game has Tied!"
     }
     else {
-        messageEl.innerText = `Congratulations, ${winner}, You have won!`
+        messageEl.innerText = `Congratulations, You have won!`
     }
 }
 
-/*----------------------------- Event Listeners -----------------------------*/
+const checkForTie = () => {
+    if (winner) return
+    if (board.includes('')) {
+        return
+    }
+    else {
+        tie = true
+    }
+}
+const placePiece = (index) => {
+    board[index] = turn;
+}
 
+const checkWinner = () => {
+    winningCombos.forEach((num, idx) => {
+        if (board[num[0]] !== '') {
+            if (board[num[0]] === board[num[1]] === board[num[2]]) {
+                winner = true
+            }
+        }
+    })
+}
+
+const switchPlayerTurn = () => {
+    if (winner) {
+        return
+    }
+    else {
+        if (turn === 'X') {
+            turn = 'O'
+        }
+        else {
+            turn = 'X'
+        }
+    }
+
+}
+const handleClick = (event) => {
+    const squareIndex = event.target.id
+    if (board[squareIndex].innerText === 'X' || board[squareIndex].innerText === 'O' || winner === true) {
+        return
+    }
+    placePiece(squareIndex);
+    checkWinner()
+    checkForTie()
+    switchPlayerTurn()
+    render()
+}
+/*----------------------------- Event Listeners -----------------------------*/
+squareEls.forEach(s => s.addEventListener('click', handleClick))
 
 init()
