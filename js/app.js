@@ -19,7 +19,7 @@ let board = [], turn, winner, tie;
 
 const squareEls = document.querySelectorAll(".sqr")
 const messageEl = document.querySelector("#message")
-console.log(squareEls, messageEl);
+const resetBtnEl = document.querySelector("#reset")
 /*-------------------------------- Functions --------------------------------*/
 const init = () => {
     board = ['', '', '', '', '', '', '', '', '']
@@ -29,10 +29,6 @@ const init = () => {
     render()
 }
 
-const render = () => {
-    updateBoard()
-    updateMessage()
-}
 
 const updateBoard = () => {
     board.forEach((n, idx) => {
@@ -43,18 +39,24 @@ const updateBoard = () => {
 const updateMessage = () => {
     if (!winner && !tie) {
         if (turn === 'X') {
-            turn = 'O'
+            messageEl.innerText = `X's Turn`
         }
         else {
-            turn = 'X'
+            messageEl.innerText = `O's Turn`
+
         }
     }
     else if (!winner & tie) {
         messageEl.innerText = "Game has Tied!"
     }
     else {
-        messageEl.innerText = `Congratulations, You have won!`
+        messageEl.innerText = `Congratulations, ${turn} have won!`
     }
+}
+
+const render = () => {
+    updateBoard()
+    updateMessage()
 }
 
 const checkForTie = () => {
@@ -73,7 +75,7 @@ const placePiece = (index) => {
 const checkWinner = () => {
     winningCombos.forEach((num, idx) => {
         if (board[num[0]] !== '') {
-            if (board[num[0]] === board[num[1]] === board[num[2]]) {
+            if (board[num[0]] === board[num[1]] && board[num[0]] === board[num[2]]) {
                 winner = true
             }
         }
@@ -96,7 +98,8 @@ const switchPlayerTurn = () => {
 }
 const handleClick = (event) => {
     const squareIndex = event.target.id
-    if (board[squareIndex].innerText === 'X' || board[squareIndex].innerText === 'O' || winner === true) {
+    if (board[squareIndex] === 'X' || board[squareIndex] === 'O' || winner === true) {
+        console.log(board[squareIndex])
         return
     }
     placePiece(squareIndex);
@@ -107,5 +110,6 @@ const handleClick = (event) => {
 }
 /*----------------------------- Event Listeners -----------------------------*/
 squareEls.forEach(s => s.addEventListener('click', handleClick))
-
+resetBtnEl.addEventListener('click', init)
+/*--------------------------------*/
 init()
